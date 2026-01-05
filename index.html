@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUGHWORKS // CORE_OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        electric: '#00d2ff',
+                        obsidian: '#05080a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=JetBrains+Mono&display=swap');
+
+        body {
+            background-color: #05080a;
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Blueprint Grid Effect */
+        .blueprint-grid {
+            background-image: linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .cyber-panel {
+            background: rgba(15, 23, 30, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 210, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d2ff, transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .cyber-panel:hover::before {
+            opacity: 1;
+        }
+
+        /* Scrollbar Styling */
+        .scroll-custom::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .scroll-custom::-webkit-scrollbar-track {
+            background: #030303;
+        }
+
+        .scroll-custom::-webkit-scrollbar-thumb {
+            background: #00d2ff;
+        }
+    </style>
+</head>
+
+<body class="blueprint-grid min-h-screen">
+
+    <div id="boot-loader"
+        class="fixed inset-0 z-[200] bg-obsidian flex flex-col items-center justify-center transition-opacity duration-1000">
+        <div class="relative w-64 h-32">
+            <div class="absolute inset-0 border-b border-l border-electric/10 blueprint-grid"></div>
+
+            <svg class="w-full h-full" viewBox="0 0 200 100" preserveAspectRatio="none">
+                <polyline id="chart-line" fill="none" stroke="#00d2ff" stroke-width="2" points="0,100"
+                    class="transition-all duration-500 ease-out" />
+                <circle id="chart-head" cx="0" cy="100" r="3" fill="#00d2ff"
+                    class="transition-all duration-500 shadow-[0_0_10px_#00d2ff]">
+                    <animate attributeName="opacity" values="1;0.4;1" dur="1s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+
+            <div id="boot-perc" class="absolute -top-6 right-0 font-mono text-electric text-[10px] italic">0.00%</div>
+        </div>
+
+        <div class="mt-6 font-mono text-[8px] tracking-[0.4em] text-electric uppercase flex items-center gap-2">
+            <span class="animate-pulse">●</span> <span id="boot-status">Initializing_Market_Data</span>
+        </div>
+    </div>
+
+    <main id="landing-ui" class="transition-all duration-700 p-6 md:p-12 max-w-[1600px] mx-auto">
+
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
+            <div class="brand">
+                <span
+                    class="text-[10px] text-electric tracking-[0.5em] block mb-2 font-mono">SYSTEM_VERSION_4.2.25</span>
+                <h1 class="text-5xl font-black italic uppercase tracking-tighter">LUGH<span
+                        class="text-electric">WORKS</span></h1>
+            </div>
+
+            <div class="flex gap-8 font-mono">
+                <div id="market-nodes" class="hidden md:flex gap-4 border-r border-white/10 pr-8">
+                </div>
+                <div class="text-right">
+                    <span class="block text-[8px] opacity-30 uppercase">Uplink_Status</span>
+                    <span id="server-status" class="text-xs text-electric">STABLE // SECURE</span>
+                </div>
+                <div class="text-right border-l border-white/10 pl-8">
+                    <span class="block text-[8px] opacity-30 uppercase">Local_Time</span>
+                    <span id="player-count" class="text-xs font-mono text-electric">00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="volatility-alert" class="hidden mb-8 overflow-hidden">
+            <div class="cyber-panel border-electric bg-electric/5 p-4 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <div class="w-3 h-3 bg-electric rounded-full animate-ping"></div>
+                        <div class="absolute inset-0 w-3 h-3 bg-electric rounded-full"></div>
+                    </div>
+                    <div>
+                        <span
+                            class="text-[10px] font-mono text-electric tracking-[0.2em] block">VOLATILITY_SURGE_DETECTED</span>
+                        <h4 id="alert-message" class="text-xs font-black italic uppercase tracking-wider">LSE / NYSE
+                            OVERLAP: PEAK LIQUIDITY</h4>
+                    </div>
+                </div>
+                <div class="text-right font-mono text-[9px] opacity-50">
+                    STRATEGY: SCALPING / DAY_TRADING
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+            <div onclick="window.openModule('dayTrading')" class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">01 // INTRADAY</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">Day
+                    Trading</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Executing rapid market entries and exits
+                    within a single session.</p>
+            </div>
+
+            <div onclick="window.openModule('swingTrading')"
+                class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">02 // TREND</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">Swing
+                    Trading</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Capturing multi-day price movements and
+                    structural shifts.</p>
+            </div>
+
+            <div onclick="window.openModule('scalping')" class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">03 // VELOCITY</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">
+                    Scalping</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Extracting small profits from high-frequency
+                    micro-movements.</p>
+            </div>
+
+            <div onclick="window.openModule('positionTrading')"
+                class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">04 // MACRO</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">
+                    Position</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Long-term strategic holdings based on economic
+                    cycles.</p>
+            </div>
+
+            <div onclick="window.openModule('momentumTrading')"
+                class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">05 // STRENGTH</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">
+                    Momentum</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Capitalizing on stocks moving significantly on
+                    high volume.</p>
+            </div>
+
+            <div onclick="window.openModule('algoTrading')" class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">06 // AUTOMATED</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">Algo
+                    Trading</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Utilizing coded logic for emotionless trade
+                    execution.</p>
+            </div>
+
+            <div onclick="window.openModule('technicalTrading')"
+                class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">07 // ANALYSIS</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">
+                    Technicals</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Predicting price action through chart patterns
+                    and indicators.</p>
+            </div>
+
+            <div onclick="window.openModule('fundamentalTrading')"
+                class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">08 // INTRINSIC</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">
+                    Fundamentals</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Evaluating assets based on earnings and
+                    economic health.</p>
+            </div>
+
+            <div onclick="window.openModule('deliveryTrading')"
+                class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">09 // EQUITY</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">
+                    Delivery</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Acquiring asset ownership with a focus on
+                    wealth building.</p>
+            </div>
+
+            <div onclick="window.openModule('newsTrading')" class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">10 // CATALYST</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">News
+                    Events</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Trading the volatility caused by global
+                    economic reports.</p>
+            </div>
+
+            <div onclick="window.openModule('options')" class="cyber-panel p-8 cursor-pointer group transition-all">
+                <span class="text-electric font-mono text-[10px] italic">11 // DERIVATIVES</span>
+                <h3 class="text-2xl font-black mt-4 group-hover:text-electric transition-colors uppercase italic">
+                    Options</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Leveraging contracts to hedge risk and amplify
+                    directional bets.</p>
+            </div>
+
+            <div onclick="window.openModule('risk')" class="cyber-panel p-8 cursor-pointer group transition-all border-red-500/20 hover:border-red-500/50 bg-red-500/5">
+                <span class="text-red-500 font-mono text-[10px] italic">12 // SURVIVAL</span>
+                <h3
+                    class="text-2xl font-black mt-4 group-hover:text-red-500 transition-colors uppercase italic text-red-500/80">
+                    Risk Management</h3>
+                <p class="text-[10px] text-zinc-500 mt-4 leading-relaxed">Protecting capital through position sizing and statistical safety.</p>
+            </div>
+
+        </div>
+
+        <footer
+            class="mt-16 flex justify-between items-center opacity-20 font-mono text-[9px] uppercase tracking-widest">
+            <div>Core_Temp: Optimal // 32°C</div>
+            <div>Authorized_Access: Student_01</div>
+            <div>© LUGHWORKS INDUSTRIES 2025</div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
