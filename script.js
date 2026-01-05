@@ -1,4 +1,3 @@
-// Lughworks Core Engine
 const TRADING_MODULES = [
   "dayTrading",
   "swingTrading",
@@ -10,8 +9,8 @@ const TRADING_MODULES = [
   "fundamentalTrading",
   "deliveryTrading",
   "newsTrading",
-  "options", // New Module Identifier
-  "risk"    // New Module Identifier
+  "options",
+  "risk"
 ];
 
 async function initLughworks() {
@@ -21,7 +20,7 @@ async function initLughworks() {
   const percText = document.getElementById("boot-perc");
   const statusText = document.getElementById("boot-status");
 
-  let points = "0,100"; // Starting point
+  let points = "0,100";
   let currentX = 0;
 
   const stages = [
@@ -33,28 +32,22 @@ async function initLughworks() {
 
   for (const stage of stages) {
     await new Promise((r) => setTimeout(r, 600));
-
-    // Advance the graph
     currentX += 50;
     points += ` ${currentX},${stage.y}`;
 
-    // Update SVG Elements
     chartLine.setAttribute("points", points);
     chartHead.setAttribute("cx", currentX);
     chartHead.setAttribute("cy", stage.y);
 
-    // Update Text
     percText.innerText = `${stage.progress}.00%`;
     statusText.innerText = stage.text;
   }
 
-  // Smooth transition to main dashboard
   setTimeout(() => {
     if (bootOverlay) {
       bootOverlay.style.opacity = "0";
       setTimeout(() => {
         bootOverlay.classList.add("hidden");
-        // Trigger clock or other UI animations here
       }, 1000);
     }
   }, 400);
@@ -78,7 +71,6 @@ window.openModule = async (pageName) => {
     "fixed inset-0 z-[100] bg-[#05080a] opacity-0 transition-all duration-700 translate-x-full overflow-y-auto";
 
   try {
-    // Points to the /modules/ folder
     const pageModule = await import(`./modules/${pageName}.js`);
     const renderFunc = pageModule.render;
 
@@ -127,7 +119,6 @@ function updateMarketStatus() {
   const now = new Date();
 
   container.innerHTML = EXCHANGES.map((ex) => {
-    // Convert current time to the specific exchange's timezone
     const exTime = new Intl.DateTimeFormat("en-US", {
       hour: "numeric",
       hour12: false,
@@ -165,7 +156,6 @@ function checkVolatility() {
         return hour >= ex.open && hour < ex.close;
     });
 
-    // Detect Overlaps (Volatility Events)
     if (openExchanges.length >= 2) {
         const names = openExchanges.map(ex => ex.name).join(' / ');
         alertMsg.innerText = `${names} OVERLAP: PEAK LIQUIDITY`;
@@ -175,7 +165,6 @@ function checkVolatility() {
         const hour = parseInt(new Intl.DateTimeFormat('en-US', {
             hour: 'numeric', hour12: false, timeZone: ex.tz
         }).format(now));
-        // Check for "Power Hour" (First/Last hour of exchange)
         return hour === ex.open || hour === ex.close - 1;
     })) {
         alertMsg.innerText = `MARKET_OPEN/CLOSE: EXPECT HIGH VOLATILITY`;
@@ -185,15 +174,12 @@ function checkVolatility() {
     }
 }
 
-// Run this every minute alongside the clock
 setInterval(checkVolatility, 60000);
-checkVolatility(); // Initial check
-
-// Add this to your window.onload or init function
-setInterval(updateMarketStatus, 60000); // Update every minute
+checkVolatility();
+setInterval(updateMarketStatus, 60000);
 updateMarketStatus();
 window.onload = initLughworks;
 window.addEventListener("load", () => {
-  updateClock(); // Initial call
-  setInterval(updateClock, 60000); // Update every 60 second
+  updateClock();
+  setInterval(updateClock, 60000);
 });
